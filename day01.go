@@ -52,9 +52,16 @@ func day01b(puzzleData []string) {
 	dial := dialStart
 	passwordCount := 0
 	for _, instruction := range InstructionList {
-
+		var startAtZero bool
+		var landAtZero bool
+		if dial == 0 {
+			startAtZero = true
+		} else {
+			startAtZero = false
+		}
 		if instruction.amount > 99 {
-
+			passwordCount = passwordCount + (instruction.amount / 100)
+			//fmt.Println("Instruction: ", instruction)
 			instruction.amount = instruction.amount % 100
 
 		}
@@ -64,23 +71,34 @@ func day01b(puzzleData []string) {
 
 			if dial < 0 {
 				dial = (100 + dial)
+				if !startAtZero && dial != 0 {
+					passwordCount++
 
+					//fmt.Println("Passed 0 Instruction: ", instruction)
+				}
 			}
 		}
 		if instruction.direction == "R" {
 			dial = dial + instruction.amount
 			if dial > 99 {
 				dial = 0 + (dial - 100)
+				if !startAtZero && dial != 0 {
+					passwordCount++
 
+					//fmt.Println("Passed 0 Instruction: ", instruction)
+				}
 			}
 		}
 
-		if dial == 0 {
+		if dial == 0 && !landAtZero {
 			passwordCount++
+			//fmt.Println("Land at 0 Instruction: ", instruction)
+
 		}
 
 	}
-	fmt.Println("Day 01a Answer: ", passwordCount)
+
+	fmt.Println("Day 01b Answer: ", passwordCount)
 }
 
 func day1DataProcess(rawData []string) []instructions {
